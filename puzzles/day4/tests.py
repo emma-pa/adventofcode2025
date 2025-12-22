@@ -1,6 +1,12 @@
 import unittest
 
-from puzzles.day4 import count_accessible_rolls, parse_shelves, resolve_grid
+from puzzles.day4 import (
+    count_accessible_rolls,
+    parse_shelves,
+    remove_rolls,
+    remove_rolls_from_grid,
+    resolve_grid,
+)
 import numpy as np
 
 
@@ -44,6 +50,20 @@ test_resolved_grid = np.array(
         [1, 0, 1, 0, 0, 0, 0, 0, 1, 0],
     ]
 )
+test_next_state_grid = np.array(
+    [
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 1, 1, 0, 1, 0, 1, 0, 1, 1],
+        [1, 1, 1, 1, 1, 0, 0, 0, 1, 1],
+        [1, 0, 1, 1, 1, 1, 0, 0, 1, 0],
+        [0, 1, 0, 1, 1, 1, 1, 0, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+        [0, 0, 1, 1, 1, 0, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+    ]
+)
 
 
 class TestDay4Part1(unittest.TestCase):
@@ -58,3 +78,13 @@ class TestDay4Part1(unittest.TestCase):
 
     def test_count_accessible_rolls(self):
         assert count_accessible_rolls(test_resolved_grid) == 13
+
+
+class TestDay4Part2(unittest.TestCase):
+    def test_remove_rolls_from_grid(self):
+        new_state_grid = remove_rolls_from_grid(test_parsed_grid, test_resolved_grid)
+        assert np.array_equal(new_state_grid, test_next_state_grid)
+
+    def test_remove_rolls(self):
+        total_removed_rolls = remove_rolls(test_parsed_grid)
+        assert total_removed_rolls == 43

@@ -51,3 +51,39 @@ def parse_shelves(shelves: list[str]) -> NDArray:
 
     np_parsed_grid = np.array(parsed_grid)
     return np_parsed_grid
+
+
+# Typing??
+def remove_roll(position):
+    if position >= 2:
+        return 0
+    else:
+        return position
+
+
+# This function doesn't do any assert if position in grid is 1 and position in resoled_grid is 1 as well, but it should, as this condition is necessary, otherwise there is a bug
+# Might make things hard to debug
+def remove_rolls_from_grid(grid: NDArray, resolved_grid: NDArray) -> NDArray:
+    """Use resolved_grid as a mask on the original grid to remove the rolls where position in mask is 1.
+    Removing a roll means changing the a 1 in the original grid into a 0.
+    """
+    v_remove_roll = np.vectorize(remove_roll)
+    remove_rolls_grid = grid + resolved_grid
+    remove_rolls_grid = v_remove_roll(remove_rolls_grid)
+    return remove_rolls_grid
+
+
+# TODO: Try with recursion
+def remove_rolls(grid: NDArray) -> int:
+    """Remove rolls until count_accessible_rolls is 0"""
+    resolved_grid = resolve_grid(grid)
+    accessible_rolls = count_accessible_rolls(resolved_grid)
+    total_removed_rolls = 0
+
+    while accessible_rolls > 0:
+        grid = remove_rolls_from_grid(grid, resolved_grid)
+        total_removed_rolls += accessible_rolls
+        resolved_grid = resolve_grid(grid)
+        accessible_rolls = count_accessible_rolls(resolved_grid)
+
+    return total_removed_rolls
