@@ -73,17 +73,14 @@ def remove_rolls_from_grid(grid: NDArray, resolved_grid: NDArray) -> NDArray:
     return remove_rolls_grid
 
 
-# TODO: Try with recursion
-def remove_rolls(grid: NDArray) -> int:
+def remove_rolls(grid: NDArray, total_removed_rolls = 0) -> int:
     """Remove rolls until count_accessible_rolls is 0"""
     resolved_grid = resolve_grid(grid)
     accessible_rolls = count_accessible_rolls(resolved_grid)
-    total_removed_rolls = 0
 
-    while accessible_rolls > 0:
+    if accessible_rolls == 0:
+        return total_removed_rolls
+    else:
         grid = remove_rolls_from_grid(grid, resolved_grid)
         total_removed_rolls += accessible_rolls
-        resolved_grid = resolve_grid(grid)
-        accessible_rolls = count_accessible_rolls(resolved_grid)
-
-    return total_removed_rolls
+        return remove_rolls(grid, total_removed_rolls)
