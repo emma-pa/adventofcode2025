@@ -1,0 +1,1 @@
+My solutions to some puzzles of [Advent Of Code 2025](https://adventofcode.com/) using Python.
